@@ -1,21 +1,21 @@
 {
   "name": "fanpit-real",
   "version": "1.0.0",
-  "description": "",
+  "description": "Fanpit backend ready for Railway deployment",
   "main": "dist/main.js",
+  "engines": {
+    "node": "18.x"
+  },
   "scripts": {
     "start": "node dist/main.js",
     "start:dev": "nodemon",
     "start:tsdev": "ts-node-dev --respawn --transpile-only src/main.ts",
     "start:debug": "nodemon --inspect src/main.ts",
-    "build": "tsc",
+    "build": "tsc -p tsconfig.build.json",
     "seed:users": "ts-node src/seed/seed-users.ts",
     "seed:brands": "ts-node src/seed/seed-brands.ts",
     "seed:spaces": "ts-node src/seed/seed-spaces.ts"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "@nestjs/common": "^11.1.6",
     "@nestjs/config": "^4.0.2",
