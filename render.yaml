@@ -1,0 +1,37 @@
+services:
+  - type: web
+    name: fanpit-backend
+    env: node
+    plan: free
+    buildCommand: cd backend && npm install && npm run build
+    startCommand: cd backend && node dist/main.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: JWT_SECRET
+        generateValue: true
+      - key: MONGO_URI
+        fromDatabase:
+          name: fanpit-mongodb
+          property: connectionString
+      - key: RAZOR_PAY_ID
+        value: rzp_test_RH4FRwCMZt7jUJ
+      - key: RAZOR_PAY_PASS
+        value: f22GuE0IQ0KmRat4lKte9M1L
+      - key: EMAIL_USER
+        value: kartikeyapusapati@gmail.com
+      - key: EMAIL_PASS
+        value: omhyryhtqooauacx
+      - key: TWILIO_ACCOUNT_SID
+        value: your_twilio_account_sid
+      - key: TWILIO_AUTH_TOKEN
+        value: your_twilio_auth_token
+      - key: TWILIO_PHONE_NUMBER
+        value: your_twilio_phone_number
+
+databases:
+  - name: fanpit-mongodb
+    plan: free
+    databaseName: fanpit
