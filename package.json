@@ -16,7 +16,10 @@
     "seed:brands": "ts-node src/seed/seed-brands.ts",
     "seed:spaces": "ts-node src/seed/seed-spaces.ts",
     "seed:loyalty": "ts-node src/seed/seed-loyalty.ts",
-    "seed:loyalty-memberships": "ts-node src/seed/seed-loyalty-memberships.ts"
+    "seed:loyalty-memberships": "ts-node src/seed/seed-loyalty-memberships.ts",
+    "seed:jane-brand": "ts-node src/seed/seed-jane-smith-brand.ts",
+    "seed:staff-admin": "ts-node src/seed/seed-staff-admin-data.ts",
+    "seed:all": "npm run seed:users && npm run seed:brands && npm run seed:spaces && npm run seed:jane-brand && npm run seed:staff-admin"
   },
   "dependencies": {
     "@nestjs/common": "^11.1.6",

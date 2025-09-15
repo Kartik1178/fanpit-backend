@@ -12,7 +12,7 @@ import {
 import { AdminService } from './admin.service';
 import { BanUserDto } from './dto/ban-user.dto';
 import { VerifyBrandDto } from './dto/verify-brand.dto';
-import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
+import { RobustJwtGuard } from '../common/guards/robust-jwt.guard';
 import { RolesGuard } from '../common/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
 import { UserRole } from '../users/schemas/user.schema';
@@ -22,7 +22,7 @@ export class AdminController {
   constructor(private readonly adminService: AdminService) {}
 
   @Get('users')
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(RobustJwtGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
   async getAllUsers(
     @Query('page') page: number = 1,
@@ -33,7 +33,7 @@ export class AdminController {
   }
 
   @Post('users/:userId/ban')
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(RobustJwtGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
   async banUser(
     @Param('userId') userId: string,
@@ -44,7 +44,7 @@ export class AdminController {
   }
 
   @Post('users/:userId/unban')
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(RobustJwtGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
   async unbanUser(
     @Param('userId') userId: string,
@@ -54,7 +54,7 @@ export class AdminController {
   }
 
   @Get('brands')
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(RobustJwtGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
   async getAllBrands(
     @Query('page') page: number = 1,
@@ -65,7 +65,7 @@ export class AdminController {
   }
 
   @Put('brands/:brandId/verify')
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(RobustJwtGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
   async verifyBrand(
     @Param('brandId') brandId: string,
@@ -76,14 +76,14 @@ export class AdminController {
   }
 
   @Get('analytics')
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(RobustJwtGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
   async getGlobalAnalytics() {
     return this.adminService.getGlobalAnalytics();
   }
 
   @Post('bookings/:bookingId/resolve')
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(RobustJwtGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
   async resolveBookingDispute(
     @Param('bookingId') bookingId: string,

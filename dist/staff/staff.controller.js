@@ -17,7 +17,7 @@ const common_1 = require("@nestjs/common");
 const staff_service_1 = require("./staff.service");
 const assign_staff_dto_1 = require("./dto/assign-staff.dto");
 const update_staff_permissions_dto_1 = require("./dto/update-staff-permissions.dto");
-const jwt_auth_guard_1 = require("../common/guards/jwt-auth.guard");
+const robust_jwt_guard_1 = require("../common/guards/robust-jwt.guard");
 const roles_guard_1 = require("../common/guards/roles.guard");
 const roles_decorator_1 = require("../common/decorators/roles.decorator");
 const user_schema_1 = require("../users/schemas/user.schema");
@@ -115,7 +115,7 @@ __decorate([
 ], StaffController.prototype, "checkStaffPermission", null);
 exports.StaffController = StaffController = __decorate([
     (0, common_1.Controller)('staff'),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.UseGuards)(robust_jwt_guard_1.RobustJwtGuard),
     __metadata("design:paramtypes", [staff_service_1.StaffService])
 ], StaffController);
 //# sourceMappingURL=staff.controller.js.map

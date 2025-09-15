@@ -11,7 +11,7 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginDto } from './dto/login.dto';
-import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
+import { RobustJwtGuard } from '../common/guards/robust-jwt.guard';
 import { SimpleJwtGuard } from '../common/guards/simple-jwt.guard';
 import { RolesGuard } from '../common/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
@@ -34,7 +34,7 @@ export class UsersController {
   }
 
   @Post('logout')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(RobustJwtGuard)
   async logout(@CurrentUser() user: any) {
     // In a real implementation, you might want to blacklist the token
     // For now, we'll just return a success message
@@ -48,7 +48,7 @@ export class UsersController {
   }
 
   @Get()
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(RobustJwtGuard, RolesGuard)
   @Roles(UserRole.ADMIN, UserRole.STAFF)
   findAll() {
     return this.usersService.findAll();
@@ -60,14 +60,14 @@ export class UsersController {
   }
 
   @Get(':id')
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(RobustJwtGuard, RolesGuard)
   @Roles(UserRole.ADMIN, UserRole.STAFF)
   findOne(@Param('id') id: string) {
     return this.usersService.findOne(id);
   }
 
   @Put('profile')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(RobustJwtGuard)
   async updateProfile(@Request() req: any, @Body() updateData: any) {
     return this.usersService.updateProfile(req.user.sub, updateData);
   }

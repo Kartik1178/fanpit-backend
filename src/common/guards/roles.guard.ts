@@ -18,11 +18,21 @@ export class RolesGuard implements CanActivate {
     }
     
     const { user } = context.switchToHttp().getRequest();
+    const normalizeRole = (role?: string) => {
+      if (!role) return undefined;
+      if (role === 'brand_owner') return 'brandOwner';
+      return role;
+    };
     
     if (!user) {
       return false;
     }
     
-    return requiredRoles.some((role) => user.role === role);
+    const userRole = normalizeRole(user.role);
+    console.log('🚨 RolesGuard called');
+    console.log('🔍 Required roles:', requiredRoles);
+    console.log('🔍 User role (normalized):', userRole, 'Full user:', user);
+    
+    return requiredRoles.some((role) => userRole === role);
   }
 }

@@ -19,17 +19,27 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     console.log('🚨 JWT STRATEGY CALLED!');
     console.log('🔍 JWT Strategy - Payload received:', payload);
     
+    // Normalize role to a single canonical format
+    const normalizeRole = (role?: string) => {
+      if (!role) return undefined;
+      if (role === 'brand_owner') return 'brandOwner';
+      return role;
+    };
+
     // Simplified validation - just return the payload if it exists
     if (!payload || !payload.sub) {
       console.log('❌ JWT Strategy - No payload or sub');
       throw new UnauthorizedException();
     }
 
-    console.log('✅ JWT Strategy - User validated successfully');
-    return { 
-      sub: payload.sub, 
-      email: payload.email, 
-      role: payload.role 
+    const user = {
+      userId: payload.sub,
+      sub: payload.sub,
+      email: payload.email,
+      role: normalizeRole(payload.role)
     };
+
+    console.log('✅ JWT Strategy - User validated successfully with user object:', user);
+    return user;
   }
 }

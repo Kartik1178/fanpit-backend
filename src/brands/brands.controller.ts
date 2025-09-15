@@ -2,13 +2,13 @@ import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards, Request } f
 import { BrandsService } from './brands.service';
 import { CreateBrandDto } from './dto/create-brand.dto';
 import { UpdateBrandDto } from './dto/update-brand.dto';
-import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
+import { RobustJwtGuard } from '../common/guards/robust-jwt.guard';
 import { RolesGuard } from '../common/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
 import { UserRole } from '../users/schemas/user.schema';
 
 @Controller('brands')
-@UseGuards(JwtAuthGuard)
+@UseGuards(RobustJwtGuard)
 export class BrandsController {
   constructor(private readonly brandsService: BrandsService) {}
 
@@ -28,7 +28,7 @@ export class BrandsController {
   }
 
   @Get('my-brands')
-  @UseGuards(RolesGuard)
+  @UseGuards(RobustJwtGuard, RolesGuard)
   @Roles(UserRole.BRAND_OWNER, UserRole.ADMIN)
   async findMyBrands(@Request() req: any) {
     try {

@@ -2,13 +2,13 @@ import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards, Request } f
 import { StaffService } from './staff.service';
 import { AssignStaffDto } from './dto/assign-staff.dto';
 import { UpdateStaffPermissionsDto } from './dto/update-staff-permissions.dto';
-import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
+import { RobustJwtGuard } from '../common/guards/robust-jwt.guard';
 import { RolesGuard } from '../common/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
 import { UserRole } from '../users/schemas/user.schema';
 
 @Controller('staff')
-@UseGuards(JwtAuthGuard)
+@UseGuards(RobustJwtGuard)
 export class StaffController {
   constructor(private readonly staffService: StaffService) {}
 

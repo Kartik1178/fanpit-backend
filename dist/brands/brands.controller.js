@@ -17,7 +17,7 @@ const common_1 = require("@nestjs/common");
 const brands_service_1 = require("./brands.service");
 const create_brand_dto_1 = require("./dto/create-brand.dto");
 const update_brand_dto_1 = require("./dto/update-brand.dto");
-const jwt_auth_guard_1 = require("../common/guards/jwt-auth.guard");
+const robust_jwt_guard_1 = require("../common/guards/robust-jwt.guard");
 const roles_guard_1 = require("../common/guards/roles.guard");
 const roles_decorator_1 = require("../common/decorators/roles.decorator");
 const user_schema_1 = require("../users/schemas/user.schema");
@@ -94,7 +94,7 @@ __decorate([
 ], BrandsController.prototype, "findAll", null);
 __decorate([
     (0, common_1.Get)('my-brands'),
-    (0, common_1.UseGuards)(roles_guard_1.RolesGuard),
+    (0, common_1.UseGuards)(robust_jwt_guard_1.RobustJwtGuard, roles_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)(user_schema_1.UserRole.BRAND_OWNER, user_schema_1.UserRole.ADMIN),
     __param(0, (0, common_1.Request)()),
     __metadata("design:type", Function),
@@ -151,7 +151,7 @@ __decorate([
 ], BrandsController.prototype, "getBrandAnalytics", null);
 exports.BrandsController = BrandsController = __decorate([
     (0, common_1.Controller)('brands'),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.UseGuards)(robust_jwt_guard_1.RobustJwtGuard),
     __metadata("design:paramtypes", [brands_service_1.BrandsService])
 ], BrandsController);
 //# sourceMappingURL=brands.controller.js.map

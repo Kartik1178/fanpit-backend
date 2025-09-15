@@ -15,9 +15,7 @@ import { CreateLoyaltyProgramDto } from './dto/create-loyalty-program.dto';
 import { CreateLoyaltyRewardDto } from './dto/create-loyalty-reward.dto';
 import { EarnPointsDto } from './dto/earn-points.dto';
 import { RedeemRewardDto } from './dto/redeem-reward.dto';
-import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
-import { SimpleJwtGuard } from '../common/guards/simple-jwt.guard';
-import { BypassAuthGuard } from '../common/guards/bypass-auth.guard';
+import { RobustJwtGuard } from '../common/guards/robust-jwt.guard';
 import { RolesGuard } from '../common/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
 import { UserRole } from '../users/schemas/user.schema';
@@ -28,7 +26,7 @@ export class LoyaltyController {
 
   // Loyalty Program Management (Brand Owners & Admin)
   @Post('programs')
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(RobustJwtGuard, RolesGuard)
   @Roles(UserRole.BRAND_OWNER, UserRole.ADMIN)
   async createLoyaltyProgram(@Body() createLoyaltyProgramDto: CreateLoyaltyProgramDto) {
     return this.loyaltyService.createLoyaltyProgram(createLoyaltyProgramDto);
@@ -45,7 +43,7 @@ export class LoyaltyController {
   }
 
   @Put('programs/:id')
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(RobustJwtGuard, RolesGuard)
   @Roles(UserRole.BRAND_OWNER, UserRole.ADMIN)
   async updateLoyaltyProgram(
     @Param('id') id: string,
@@ -56,7 +54,7 @@ export class LoyaltyController {
 
   // Loyalty Member Management
   @Post('join/:brandId')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(RobustJwtGuard)
   async joinLoyaltyProgram(
     @Param('brandId') brandId: string,
     @Request() req: any
@@ -65,7 +63,7 @@ export class LoyaltyController {
   }
 
   @Get('memberships')
-  @UseGuards(BypassAuthGuard)
+  @UseGuards(RobustJwtGuard)
   async getUserLoyaltyMemberships(@Request() req: any) {
     console.log('🔧 Loyalty Controller - getUserLoyaltyMemberships called');
     console.log('🔧 Loyalty Controller - User:', req.user);
@@ -80,7 +78,7 @@ export class LoyaltyController {
   }
 
   @Get('members/:brandId')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(RobustJwtGuard)
   async getLoyaltyMember(
     @Param('brandId') brandId: string,
     @Request() req: any
@@ -89,7 +87,7 @@ export class LoyaltyController {
   }
 
   @Get('dashboard/:brandId')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(RobustJwtGuard)
   async getMemberDashboard(
     @Param('brandId') brandId: string,
     @Request() req: any
@@ -99,7 +97,7 @@ export class LoyaltyController {
 
   // Points Management
   @Post('earn-points')
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(RobustJwtGuard, RolesGuard)
   @Roles(UserRole.BRAND_OWNER, UserRole.ADMIN, UserRole.STAFF)
   async earnPoints(@Body() earnPointsDto: EarnPointsDto) {
     return this.loyaltyService.earnPoints(earnPointsDto);
@@ -107,7 +105,7 @@ export class LoyaltyController {
 
   // Rewards Management
   @Post('rewards')
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(RobustJwtGuard, RolesGuard)
   @Roles(UserRole.BRAND_OWNER, UserRole.ADMIN)
   async createLoyaltyReward(@Body() createLoyaltyRewardDto: CreateLoyaltyRewardDto) {
     return this.loyaltyService.createLoyaltyReward(createLoyaltyRewardDto);
@@ -119,7 +117,7 @@ export class LoyaltyController {
   }
 
   @Get('rewards/available/:brandId')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(RobustJwtGuard)
   async getAvailableRewards(
     @Param('brandId') brandId: string,
     @Request() req: any
@@ -128,14 +126,14 @@ export class LoyaltyController {
   }
 
   @Post('redeem-reward')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(RobustJwtGuard)
   async redeemReward(@Body() redeemRewardDto: RedeemRewardDto) {
     return this.loyaltyService.redeemReward(redeemRewardDto);
   }
 
   // Analytics and Reporting
   @Get('analytics/:brandId')
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(RobustJwtGuard, RolesGuard)
   @Roles(UserRole.BRAND_OWNER, UserRole.ADMIN)
   async getLoyaltyAnalytics(@Param('brandId') brandId: string) {
     return this.loyaltyService.getLoyaltyAnalytics(brandId);

@@ -19,8 +19,7 @@ const create_loyalty_program_dto_1 = require("./dto/create-loyalty-program.dto")
 const create_loyalty_reward_dto_1 = require("./dto/create-loyalty-reward.dto");
 const earn_points_dto_1 = require("./dto/earn-points.dto");
 const redeem_reward_dto_1 = require("./dto/redeem-reward.dto");
-const jwt_auth_guard_1 = require("../common/guards/jwt-auth.guard");
-const bypass_auth_guard_1 = require("../common/guards/bypass-auth.guard");
+const robust_jwt_guard_1 = require("../common/guards/robust-jwt.guard");
 const roles_guard_1 = require("../common/guards/roles.guard");
 const roles_decorator_1 = require("../common/decorators/roles.decorator");
 const user_schema_1 = require("../users/schemas/user.schema");
@@ -87,7 +86,7 @@ let LoyaltyController = class LoyaltyController {
 exports.LoyaltyController = LoyaltyController;
 __decorate([
     (0, common_1.Post)('programs'),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
+    (0, common_1.UseGuards)(robust_jwt_guard_1.RobustJwtGuard, roles_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)(user_schema_1.UserRole.BRAND_OWNER, user_schema_1.UserRole.ADMIN),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -110,7 +109,7 @@ __decorate([
 ], LoyaltyController.prototype, "getLoyaltyProgramById", null);
 __decorate([
     (0, common_1.Put)('programs/:id'),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
+    (0, common_1.UseGuards)(robust_jwt_guard_1.RobustJwtGuard, roles_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)(user_schema_1.UserRole.BRAND_OWNER, user_schema_1.UserRole.ADMIN),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
@@ -120,7 +119,7 @@ __decorate([
 ], LoyaltyController.prototype, "updateLoyaltyProgram", null);
 __decorate([
     (0, common_1.Post)('join/:brandId'),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.UseGuards)(robust_jwt_guard_1.RobustJwtGuard),
     __param(0, (0, common_1.Param)('brandId')),
     __param(1, (0, common_1.Request)()),
     __metadata("design:type", Function),
@@ -129,7 +128,7 @@ __decorate([
 ], LoyaltyController.prototype, "joinLoyaltyProgram", null);
 __decorate([
     (0, common_1.Get)('memberships'),
-    (0, common_1.UseGuards)(bypass_auth_guard_1.BypassAuthGuard),
+    (0, common_1.UseGuards)(robust_jwt_guard_1.RobustJwtGuard),
     __param(0, (0, common_1.Request)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
@@ -144,7 +143,7 @@ __decorate([
 ], LoyaltyController.prototype, "testEndpoint", null);
 __decorate([
     (0, common_1.Get)('members/:brandId'),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.UseGuards)(robust_jwt_guard_1.RobustJwtGuard),
     __param(0, (0, common_1.Param)('brandId')),
     __param(1, (0, common_1.Request)()),
     __metadata("design:type", Function),
@@ -153,7 +152,7 @@ __decorate([
 ], LoyaltyController.prototype, "getLoyaltyMember", null);
 __decorate([
     (0, common_1.Get)('dashboard/:brandId'),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.UseGuards)(robust_jwt_guard_1.RobustJwtGuard),
     __param(0, (0, common_1.Param)('brandId')),
     __param(1, (0, common_1.Request)()),
     __metadata("design:type", Function),
@@ -162,7 +161,7 @@ __decorate([
 ], LoyaltyController.prototype, "getMemberDashboard", null);
 __decorate([
     (0, common_1.Post)('earn-points'),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
+    (0, common_1.UseGuards)(robust_jwt_guard_1.RobustJwtGuard, roles_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)(user_schema_1.UserRole.BRAND_OWNER, user_schema_1.UserRole.ADMIN, user_schema_1.UserRole.STAFF),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -171,7 +170,7 @@ __decorate([
 ], LoyaltyController.prototype, "earnPoints", null);
 __decorate([
     (0, common_1.Post)('rewards'),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
+    (0, common_1.UseGuards)(robust_jwt_guard_1.RobustJwtGuard, roles_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)(user_schema_1.UserRole.BRAND_OWNER, user_schema_1.UserRole.ADMIN),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -187,7 +186,7 @@ __decorate([
 ], LoyaltyController.prototype, "getLoyaltyRewardsByBrand", null);
 __decorate([
     (0, common_1.Get)('rewards/available/:brandId'),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.UseGuards)(robust_jwt_guard_1.RobustJwtGuard),
     __param(0, (0, common_1.Param)('brandId')),
     __param(1, (0, common_1.Request)()),
     __metadata("design:type", Function),
@@ -196,7 +195,7 @@ __decorate([
 ], LoyaltyController.prototype, "getAvailableRewards", null);
 __decorate([
     (0, common_1.Post)('redeem-reward'),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.UseGuards)(robust_jwt_guard_1.RobustJwtGuard),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [redeem_reward_dto_1.RedeemRewardDto]),
@@ -204,7 +203,7 @@ __decorate([
 ], LoyaltyController.prototype, "redeemReward", null);
 __decorate([
     (0, common_1.Get)('analytics/:brandId'),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
+    (0, common_1.UseGuards)(robust_jwt_guard_1.RobustJwtGuard, roles_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)(user_schema_1.UserRole.BRAND_OWNER, user_schema_1.UserRole.ADMIN),
     __param(0, (0, common_1.Param)('brandId')),
     __metadata("design:type", Function),

@@ -14,7 +14,7 @@ import { SpacesService } from './spaces.service';
 import { CreateSpaceDto } from './dto/create-space.dto';
 import { UpdateSpaceDto } from './dto/update-space.dto';
 import { QuerySpacesDto } from './dto/query-spaces.dto';
-import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
+import { RobustJwtGuard } from '../common/guards/robust-jwt.guard';
 import { RolesGuard } from '../common/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
 import { UserRole } from '../users/schemas/user.schema';
@@ -24,7 +24,7 @@ export class SpacesController {
   constructor(private readonly spacesService: SpacesService) {}
 
   @Post()
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(RobustJwtGuard, RolesGuard)
   @Roles(UserRole.BRAND_OWNER, UserRole.STAFF, UserRole.ADMIN)
   create(@Body() createSpaceDto: CreateSpaceDto, @Request() req) {
     // Set the brand from the authenticated user
@@ -65,7 +65,7 @@ export class SpacesController {
   }
 
   @Patch(':id')
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(RobustJwtGuard, RolesGuard)
   @Roles(UserRole.BRAND_OWNER, UserRole.STAFF, UserRole.ADMIN)
   update(@Param('id') id: string, @Body() updateSpaceDto: UpdateSpaceDto, @Request() req) {
     // Add authorization check here if needed
@@ -73,7 +73,7 @@ export class SpacesController {
   }
 
   @Delete(':id')
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(RobustJwtGuard, RolesGuard)
   @Roles(UserRole.BRAND_OWNER, UserRole.STAFF, UserRole.ADMIN)
   remove(@Param('id') id: string) {
     return this.spacesService.remove(id);

@@ -17,7 +17,7 @@ const common_1 = require("@nestjs/common");
 const admin_service_1 = require("./admin.service");
 const ban_user_dto_1 = require("./dto/ban-user.dto");
 const verify_brand_dto_1 = require("./dto/verify-brand.dto");
-const jwt_auth_guard_1 = require("../common/guards/jwt-auth.guard");
+const robust_jwt_guard_1 = require("../common/guards/robust-jwt.guard");
 const roles_guard_1 = require("../common/guards/roles.guard");
 const roles_decorator_1 = require("../common/decorators/roles.decorator");
 const user_schema_1 = require("../users/schemas/user.schema");
@@ -50,7 +50,7 @@ let AdminController = class AdminController {
 exports.AdminController = AdminController;
 __decorate([
     (0, common_1.Get)('users'),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
+    (0, common_1.UseGuards)(robust_jwt_guard_1.RobustJwtGuard, roles_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)(user_schema_1.UserRole.ADMIN),
     __param(0, (0, common_1.Query)('page')),
     __param(1, (0, common_1.Query)('limit')),
@@ -61,7 +61,7 @@ __decorate([
 ], AdminController.prototype, "getAllUsers", null);
 __decorate([
     (0, common_1.Post)('users/:userId/ban'),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
+    (0, common_1.UseGuards)(robust_jwt_guard_1.RobustJwtGuard, roles_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)(user_schema_1.UserRole.ADMIN),
     __param(0, (0, common_1.Param)('userId')),
     __param(1, (0, common_1.Body)()),
@@ -72,7 +72,7 @@ __decorate([
 ], AdminController.prototype, "banUser", null);
 __decorate([
     (0, common_1.Post)('users/:userId/unban'),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
+    (0, common_1.UseGuards)(robust_jwt_guard_1.RobustJwtGuard, roles_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)(user_schema_1.UserRole.ADMIN),
     __param(0, (0, common_1.Param)('userId')),
     __param(1, (0, common_1.Request)()),
@@ -82,7 +82,7 @@ __decorate([
 ], AdminController.prototype, "unbanUser", null);
 __decorate([
     (0, common_1.Get)('brands'),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
+    (0, common_1.UseGuards)(robust_jwt_guard_1.RobustJwtGuard, roles_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)(user_schema_1.UserRole.ADMIN),
     __param(0, (0, common_1.Query)('page')),
     __param(1, (0, common_1.Query)('limit')),
@@ -93,7 +93,7 @@ __decorate([
 ], AdminController.prototype, "getAllBrands", null);
 __decorate([
     (0, common_1.Put)('brands/:brandId/verify'),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
+    (0, common_1.UseGuards)(robust_jwt_guard_1.RobustJwtGuard, roles_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)(user_schema_1.UserRole.ADMIN),
     __param(0, (0, common_1.Param)('brandId')),
     __param(1, (0, common_1.Body)()),
@@ -104,7 +104,7 @@ __decorate([
 ], AdminController.prototype, "verifyBrand", null);
 __decorate([
     (0, common_1.Get)('analytics'),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
+    (0, common_1.UseGuards)(robust_jwt_guard_1.RobustJwtGuard, roles_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)(user_schema_1.UserRole.ADMIN),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
@@ -112,7 +112,7 @@ __decorate([
 ], AdminController.prototype, "getGlobalAnalytics", null);
 __decorate([
     (0, common_1.Post)('bookings/:bookingId/resolve'),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
+    (0, common_1.UseGuards)(robust_jwt_guard_1.RobustJwtGuard, roles_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)(user_schema_1.UserRole.ADMIN),
     __param(0, (0, common_1.Param)('bookingId')),
     __param(1, (0, common_1.Body)('resolution')),
