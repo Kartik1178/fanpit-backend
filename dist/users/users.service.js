@@ -86,6 +86,13 @@ let UsersService = class UsersService {
     async validatePassword(plainPassword, hashedPassword) {
         return bcrypt.compare(plainPassword, hashedPassword);
     }
+    async updateProfile(userId, updateData) {
+        const user = await this.userModel.findByIdAndUpdate(userId, { $set: updateData }, { new: true, runValidators: true }).select('-password').exec();
+        if (!user) {
+            throw new common_1.NotFoundException('User not found');
+        }
+        return user;
+    }
 };
 exports.UsersService = UsersService;
 exports.UsersService = UsersService = __decorate([

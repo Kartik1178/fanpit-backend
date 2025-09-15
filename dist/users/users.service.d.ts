@@ -19,4 +19,5 @@ export declare class UsersService {
     findOne(id: string): Promise<User>;
     findByEmail(email: string): Promise<UserDocument | null>;
     validatePassword(plainPassword: string, hashedPassword: string): Promise<boolean>;
+    updateProfile(userId: string, updateData: any): Promise<User>;
 }

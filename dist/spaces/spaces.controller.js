@@ -20,7 +20,7 @@ const update_space_dto_1 = require("./dto/update-space.dto");
 const query_spaces_dto_1 = require("./dto/query-spaces.dto");
 const jwt_auth_guard_1 = require("../common/guards/jwt-auth.guard");
 const roles_guard_1 = require("../common/guards/roles.guard");
-const roles_guard_2 = require("../common/guards/roles.guard");
+const roles_decorator_1 = require("../common/decorators/roles.decorator");
 const user_schema_1 = require("../users/schemas/user.schema");
 let SpacesController = class SpacesController {
     constructor(spacesService) {
@@ -61,7 +61,7 @@ exports.SpacesController = SpacesController;
 __decorate([
     (0, common_1.Post)(),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
-    (0, roles_guard_2.Roles)(user_schema_1.UserRole.BRAND_OWNER, user_schema_1.UserRole.STAFF, user_schema_1.UserRole.ADMIN),
+    (0, roles_decorator_1.Roles)(user_schema_1.UserRole.BRAND_OWNER, user_schema_1.UserRole.STAFF, user_schema_1.UserRole.ADMIN),
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.Request)()),
     __metadata("design:type", Function),
@@ -110,7 +110,7 @@ __decorate([
 __decorate([
     (0, common_1.Patch)(':id'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
-    (0, roles_guard_2.Roles)(user_schema_1.UserRole.BRAND_OWNER, user_schema_1.UserRole.STAFF, user_schema_1.UserRole.ADMIN),
+    (0, roles_decorator_1.Roles)(user_schema_1.UserRole.BRAND_OWNER, user_schema_1.UserRole.STAFF, user_schema_1.UserRole.ADMIN),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
     __param(2, (0, common_1.Request)()),
@@ -121,7 +121,7 @@ __decorate([
 __decorate([
     (0, common_1.Delete)(':id'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
-    (0, roles_guard_2.Roles)(user_schema_1.UserRole.BRAND_OWNER, user_schema_1.UserRole.STAFF, user_schema_1.UserRole.ADMIN),
+    (0, roles_decorator_1.Roles)(user_schema_1.UserRole.BRAND_OWNER, user_schema_1.UserRole.STAFF, user_schema_1.UserRole.ADMIN),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),

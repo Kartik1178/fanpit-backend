@@ -2,6 +2,7 @@ import {
   Controller, 
   Get, 
   Post, 
+  Put,
   Body, 
   Param, 
   UseGuards,
@@ -13,7 +14,7 @@ import { LoginDto } from './dto/login.dto';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { SimpleJwtGuard } from '../common/guards/simple-jwt.guard';
 import { RolesGuard } from '../common/guards/roles.guard';
-import { Roles } from '../common/guards/roles.guard';
+import { Roles } from '../common/decorators/roles.decorator';
 import { UserRole } from './schemas/user.schema';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 
@@ -63,5 +64,11 @@ export class UsersController {
   @Roles(UserRole.ADMIN, UserRole.STAFF)
   findOne(@Param('id') id: string) {
     return this.usersService.findOne(id);
+  }
+
+  @Put('profile')
+  @UseGuards(JwtAuthGuard)
+  async updateProfile(@Request() req: any, @Body() updateData: any) {
+    return this.usersService.updateProfile(req.user.sub, updateData);
   }
 }

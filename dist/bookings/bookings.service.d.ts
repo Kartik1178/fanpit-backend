@@ -36,4 +36,6 @@ export declare class BookingsService {
         totalRevenue: number;
     }>;
     private awardLoyaltyPoints;
+    findByBrand(brandId: string): Promise<any[]>;
+    findTodayBookings(userId: string): Promise<any[]>;
 }

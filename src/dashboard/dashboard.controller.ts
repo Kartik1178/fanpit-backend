@@ -2,7 +2,7 @@ import { Controller, Get, UseGuards, Request } from '@nestjs/common';
 import { DashboardService } from './dashboard.service';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { RolesGuard } from '../common/guards/roles.guard';
-import { Roles } from '../common/guards/roles.guard';
+import { Roles } from '../common/decorators/roles.decorator';
 import { UserRole } from '../users/schemas/user.schema';
 
 @Controller('dashboard')

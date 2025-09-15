@@ -104,4 +104,18 @@ export class UsersService {
   async validatePassword(plainPassword: string, hashedPassword: string): Promise<boolean> {
     return bcrypt.compare(plainPassword, hashedPassword);
   }
+
+  async updateProfile(userId: string, updateData: any): Promise<User> {
+    const user = await this.userModel.findByIdAndUpdate(
+      userId,
+      { $set: updateData },
+      { new: true, runValidators: true }
+    ).select('-password').exec();
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    return user;
+  }
 }

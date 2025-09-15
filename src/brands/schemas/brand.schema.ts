@@ -115,6 +115,54 @@ export class Brand {
 
   @Prop({ type: Number, default: 0 })
   totalRevenue: number; // Total revenue generated
+
+  // Enhanced RBAC fields
+  @Prop({ 
+    type: [{
+      user: { type: Types.ObjectId, ref: 'User', required: true },
+      permissions: [{ 
+        type: String, 
+        enum: ['manage_bookings', 'check_in_out', 'update_attendance', 'grant_bonus_points', 'view_analytics', 'manage_spaces'],
+        default: []
+      }],
+      assignedAt: { type: Date, default: Date.now },
+      assignedBy: { type: Types.ObjectId, ref: 'User', required: true },
+      isActive: { type: Boolean, default: true }
+    }],
+    default: []
+  })
+  staffMembers: Array<{
+    user: Types.ObjectId;
+    permissions: string[];
+    assignedAt: Date;
+    assignedBy: Types.ObjectId;
+    isActive: boolean;
+  }>;
+
+  @Prop({ 
+    type: {
+      allowStaffBonusPoints: { type: Boolean, default: false },
+      maxBonusPointsPerDay: { type: Number, default: 100 },
+      requireApprovalForBonus: { type: Boolean, default: true },
+      allowStaffAnalytics: { type: Boolean, default: true }
+    },
+    default: {}
+  })
+  staffSettings: {
+    allowStaffBonusPoints: boolean;
+    maxBonusPointsPerDay: number;
+    requireApprovalForBonus: boolean;
+    allowStaffAnalytics: boolean;
+  };
+
+  @Prop({ type: Date })
+  verifiedAt?: Date;
+
+  @Prop({ type: Types.ObjectId, ref: 'User' })
+  verifiedBy?: Types.ObjectId;
+
+  @Prop({ type: String })
+  verificationNotes?: string;
 }
 
 export const BrandSchema = SchemaFactory.createForClass(Brand);

@@ -20,6 +20,7 @@ const dashboard_module_1 = require("./dashboard/dashboard.module");
 const payments_module_1 = require("./payments/payments.module");
 const loyalty_module_1 = require("./loyalty/loyalty.module");
 const admin_module_1 = require("./admin/admin.module");
+const staff_module_1 = require("./staff/staff.module");
 const dotenv = require("dotenv");
 dotenv.config();
 console.log('MONGO_URI =>', process.env.MONGO_URI);
@@ -41,6 +42,7 @@ exports.AppModule = AppModule = __decorate([
             payments_module_1.PaymentsModule,
             loyalty_module_1.LoyaltyModule,
             admin_module_1.AdminModule,
+            staff_module_1.StaffModule,
         ],
     })
 ], AppModule);

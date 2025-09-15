@@ -19,4 +19,5 @@ export declare class UsersController {
     findAll(): Promise<import("./schemas/user.schema").User[]>;
     findAllPublic(): Promise<import("./schemas/user.schema").User[]>;
     findOne(id: string): Promise<import("./schemas/user.schema").User>;
+    updateProfile(req: any, updateData: any): Promise<import("./schemas/user.schema").User>;
 }

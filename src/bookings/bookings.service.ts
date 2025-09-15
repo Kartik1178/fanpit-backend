@@ -299,4 +299,68 @@ export class BookingsService {
       // Don't throw error to avoid breaking the booking flow
     }
   }
+
+  async findByBrand(brandId: string): Promise<any[]> {
+    try {
+      const bookings = await this.bookingModel
+        .find({ brand: brandId })
+        .populate('user', 'firstName lastName email')
+        .populate('space', 'name location pricePerHour')
+        .sort({ createdAt: -1 })
+        .exec();
+
+      return bookings.map(booking => ({
+        id: booking._id,
+        spaceName: (booking.space as any)?.name || 'Unknown Space',
+        customerName: `${(booking.user as any)?.firstName || ''} ${(booking.user as any)?.lastName || ''}`.trim() || 'Unknown Customer',
+        customerEmail: (booking.user as any)?.email || '',
+        date: booking.date,
+        startTime: booking.startTime,
+        endTime: booking.endTime,
+        duration: (booking as any).duration,
+        totalAmount: booking.totalAmount,
+        status: booking.status,
+        createdAt: (booking as any).createdAt,
+        spaceId: (booking.space as any)?._id,
+        brandId: (booking as any).brand
+      }));
+    } catch (error) {
+      throw new BadRequestException('Failed to fetch brand bookings: ' + error.message);
+    }
+  }
+
+  async findTodayBookings(userId: string): Promise<any[]> {
+    try {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const tomorrow = new Date(today);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+
+      const bookings = await this.bookingModel
+        .find({
+          date: {
+            $gte: today,
+            $lt: tomorrow
+          }
+        })
+        .populate('user', 'firstName lastName email')
+        .populate('space', 'name location pricePerHour')
+        .sort({ startTime: 1 })
+        .exec();
+
+      return bookings.map(booking => ({
+        id: booking._id,
+        bookingId: booking._id,
+        customerName: `${(booking.user as any)?.firstName || ''} ${(booking.user as any)?.lastName || ''}`.trim() || 'Unknown Customer',
+        spaceName: (booking.space as any)?.name || 'Unknown Space',
+        timeSlot: `${booking.startTime}-${booking.endTime}`,
+        status: booking.status,
+        qrCode: `QR${booking._id.toString().slice(-6)}`,
+        checkInTime: (booking as any).checkInTime,
+        checkOutTime: (booking as any).checkOutTime
+      }));
+    } catch (error) {
+      throw new BadRequestException('Failed to fetch today bookings: ' + error.message);
+    }
+  }
 }

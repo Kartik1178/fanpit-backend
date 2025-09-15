@@ -16,7 +16,7 @@ import { UpdateSpaceDto } from './dto/update-space.dto';
 import { QuerySpacesDto } from './dto/query-spaces.dto';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { RolesGuard } from '../common/guards/roles.guard';
-import { Roles } from '../common/guards/roles.guard';
+import { Roles } from '../common/decorators/roles.decorator';
 import { UserRole } from '../users/schemas/user.schema';
 
 @Controller('spaces')

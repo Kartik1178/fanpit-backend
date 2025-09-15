@@ -119,6 +119,47 @@ __decorate([
     (0, mongoose_1.Prop)({ type: Number, default: 0 }),
     __metadata("design:type", Number)
 ], Brand.prototype, "totalRevenue", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({
+        type: [{
+                user: { type: mongoose_2.Types.ObjectId, ref: 'User', required: true },
+                permissions: [{
+                        type: String,
+                        enum: ['manage_bookings', 'check_in_out', 'update_attendance', 'grant_bonus_points', 'view_analytics', 'manage_spaces'],
+                        default: []
+                    }],
+                assignedAt: { type: Date, default: Date.now },
+                assignedBy: { type: mongoose_2.Types.ObjectId, ref: 'User', required: true },
+                isActive: { type: Boolean, default: true }
+            }],
+        default: []
+    }),
+    __metadata("design:type", Array)
+], Brand.prototype, "staffMembers", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({
+        type: {
+            allowStaffBonusPoints: { type: Boolean, default: false },
+            maxBonusPointsPerDay: { type: Number, default: 100 },
+            requireApprovalForBonus: { type: Boolean, default: true },
+            allowStaffAnalytics: { type: Boolean, default: true }
+        },
+        default: {}
+    }),
+    __metadata("design:type", Object)
+], Brand.prototype, "staffSettings", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ type: Date }),
+    __metadata("design:type", Date)
+], Brand.prototype, "verifiedAt", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ type: mongoose_2.Types.ObjectId, ref: 'User' }),
+    __metadata("design:type", mongoose_2.Types.ObjectId)
+], Brand.prototype, "verifiedBy", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ type: String }),
+    __metadata("design:type", String)
+], Brand.prototype, "verificationNotes", void 0);
 exports.Brand = Brand = __decorate([
     (0, mongoose_1.Schema)({ timestamps: true })
 ], Brand);

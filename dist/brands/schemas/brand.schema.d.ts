@@ -42,6 +42,22 @@ export declare class Brand {
     };
     totalBookings: number;
     totalRevenue: number;
+    staffMembers: Array<{
+        user: Types.ObjectId;
+        permissions: string[];
+        assignedAt: Date;
+        assignedBy: Types.ObjectId;
+        isActive: boolean;
+    }>;
+    staffSettings: {
+        allowStaffBonusPoints: boolean;
+        maxBonusPointsPerDay: number;
+        requireApprovalForBonus: boolean;
+        allowStaffAnalytics: boolean;
+    };
+    verifiedAt?: Date;
+    verifiedBy?: Types.ObjectId;
+    verificationNotes?: string;
 }
 export declare const BrandSchema: import("mongoose").Schema<Brand, import("mongoose").Model<Brand, any, any, any, Document<unknown, any, Brand, any, {}> & Brand & {
     _id: Types.ObjectId;

@@ -232,6 +232,67 @@ let BookingsService = class BookingsService {
             console.error('Error awarding loyalty points:', error);
         }
     }
+    async findByBrand(brandId) {
+        try {
+            const bookings = await this.bookingModel
+                .find({ brand: brandId })
+                .populate('user', 'firstName lastName email')
+                .populate('space', 'name location pricePerHour')
+                .sort({ createdAt: -1 })
+                .exec();
+            return bookings.map(booking => ({
+                id: booking._id,
+                spaceName: booking.space?.name || 'Unknown Space',
+                customerName: `${booking.user?.firstName || ''} ${booking.user?.lastName || ''}`.trim() || 'Unknown Customer',
+                customerEmail: booking.user?.email || '',
+                date: booking.date,
+                startTime: booking.startTime,
+                endTime: booking.endTime,
+                duration: booking.duration,
+                totalAmount: booking.totalAmount,
+                status: booking.status,
+                createdAt: booking.createdAt,
+                spaceId: booking.space?._id,
+                brandId: booking.brand
+            }));
+        }
+        catch (error) {
+            throw new common_1.BadRequestException('Failed to fetch brand bookings: ' + error.message);
+        }
+    }
+    async findTodayBookings(userId) {
+        try {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const bookings = await this.bookingModel
+                .find({
+                date: {
+                    $gte: today,
+                    $lt: tomorrow
+                }
+            })
+                .populate('user', 'firstName lastName email')
+                .populate('space', 'name location pricePerHour')
+                .sort({ startTime: 1 })
+                .exec();
+            return bookings.map(booking => ({
+                id: booking._id,
+                bookingId: booking._id,
+                customerName: `${booking.user?.firstName || ''} ${booking.user?.lastName || ''}`.trim() || 'Unknown Customer',
+                spaceName: booking.space?.name || 'Unknown Space',
+                timeSlot: `${booking.startTime}-${booking.endTime}`,
+                status: booking.status,
+                qrCode: `QR${booking._id.toString().slice(-6)}`,
+                checkInTime: booking.checkInTime,
+                checkOutTime: booking.checkOutTime
+            }));
+        }
+        catch (error) {
+            throw new common_1.BadRequestException('Failed to fetch today bookings: ' + error.message);
+        }
+    }
 };
 exports.BookingsService = BookingsService;
 exports.BookingsService = BookingsService = __decorate([

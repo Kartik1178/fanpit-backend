@@ -16,7 +16,7 @@ import { UpdateBookingDto } from './dto/update-booking.dto';
 import { QueryBookingDto } from './dto/query-booking.dto';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { RolesGuard } from '../common/guards/roles.guard';
-import { Roles } from '../common/guards/roles.guard';
+import { Roles } from '../common/decorators/roles.decorator';
 import { UserRole } from '../users/schemas/user.schema';
 
 @Controller('bookings')
@@ -73,6 +73,20 @@ export class BookingsController {
   async remove(@Param('id') id: string) {
     await this.bookingsService.remove(id);
     return { message: 'Booking deleted successfully' };
+  }
+
+  @Get('brand/:brandId')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.BRAND_OWNER, UserRole.ADMIN)
+  async getBrandBookings(@Param('brandId') brandId: string, @Request() req: any) {
+    return this.bookingsService.findByBrand(brandId);
+  }
+
+  @Get('today')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.STAFF, UserRole.BRAND_OWNER, UserRole.ADMIN)
+  async getTodayBookings(@Request() req: any) {
+    return this.bookingsService.findTodayBookings(req.user.sub);
   }
 }
 

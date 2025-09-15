@@ -20,7 +20,7 @@ const update_booking_dto_1 = require("./dto/update-booking.dto");
 const query_booking_dto_1 = require("./dto/query-booking.dto");
 const jwt_auth_guard_1 = require("../common/guards/jwt-auth.guard");
 const roles_guard_1 = require("../common/guards/roles.guard");
-const roles_guard_2 = require("../common/guards/roles.guard");
+const roles_decorator_1 = require("../common/decorators/roles.decorator");
 const user_schema_1 = require("../users/schemas/user.schema");
 let BookingsController = class BookingsController {
     constructor(bookingsService) {
@@ -52,6 +52,12 @@ let BookingsController = class BookingsController {
         await this.bookingsService.remove(id);
         return { message: 'Booking deleted successfully' };
     }
+    async getBrandBookings(brandId, req) {
+        return this.bookingsService.findByBrand(brandId);
+    }
+    async getTodayBookings(req) {
+        return this.bookingsService.findTodayBookings(req.user.sub);
+    }
 };
 exports.BookingsController = BookingsController;
 __decorate([
@@ -65,7 +71,7 @@ __decorate([
 __decorate([
     (0, common_1.Get)(),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
-    (0, roles_guard_2.Roles)(user_schema_1.UserRole.ADMIN, user_schema_1.UserRole.STAFF),
+    (0, roles_decorator_1.Roles)(user_schema_1.UserRole.ADMIN, user_schema_1.UserRole.STAFF),
     __param(0, (0, common_1.Query)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [query_booking_dto_1.QueryBookingDto]),
@@ -91,7 +97,7 @@ __decorate([
 __decorate([
     (0, common_1.Get)('stats'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
-    (0, roles_guard_2.Roles)(user_schema_1.UserRole.ADMIN, user_schema_1.UserRole.STAFF),
+    (0, roles_decorator_1.Roles)(user_schema_1.UserRole.ADMIN, user_schema_1.UserRole.STAFF),
     __param(0, (0, common_1.Query)('spaceId')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
@@ -122,6 +128,25 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], BookingsController.prototype, "remove", null);
+__decorate([
+    (0, common_1.Get)('brand/:brandId'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
+    (0, roles_decorator_1.Roles)(user_schema_1.UserRole.BRAND_OWNER, user_schema_1.UserRole.ADMIN),
+    __param(0, (0, common_1.Param)('brandId')),
+    __param(1, (0, common_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:returntype", Promise)
+], BookingsController.prototype, "getBrandBookings", null);
+__decorate([
+    (0, common_1.Get)('today'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
+    (0, roles_decorator_1.Roles)(user_schema_1.UserRole.STAFF, user_schema_1.UserRole.BRAND_OWNER, user_schema_1.UserRole.ADMIN),
+    __param(0, (0, common_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], BookingsController.prototype, "getTodayBookings", null);
 exports.BookingsController = BookingsController = __decorate([
     (0, common_1.Controller)('bookings'),
     __metadata("design:paramtypes", [bookings_service_1.BookingsService])

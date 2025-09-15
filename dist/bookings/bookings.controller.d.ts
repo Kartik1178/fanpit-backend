@@ -30,4 +30,6 @@ export declare class BookingsController {
     remove(id: string): Promise<{
         message: string;
     }>;
+    getBrandBookings(brandId: string, req: any): Promise<any[]>;
+    getTodayBookings(req: any): Promise<any[]>;
 }

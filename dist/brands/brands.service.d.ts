@@ -14,8 +14,8 @@ export declare class BrandsService {
         totalPages: number;
     }>;
     findOne(id: string): Promise<Brand>;
-    update(id: string, updateBrandDto: UpdateBrandDto): Promise<Brand>;
-    remove(id: string): Promise<void>;
+    update(id: string, updateBrandDto: UpdateBrandDto, ownerId?: string): Promise<Brand>;
+    remove(id: string, ownerId?: string): Promise<void>;
     findByOwner(ownerId: string): Promise<Brand[]>;
     getCategories(): Promise<string[]>;
     getVerifiedBrands(): Promise<Brand[]>;
@@ -25,4 +25,7 @@ export declare class BrandsService {
         totalRevenue?: number;
         rating?: number;
     }): Promise<Brand>;
+    getBrandAnalytics(brandId: string, ownerId: string): Promise<any>;
+    getBrandSpaces(brandId: string, ownerId: string): Promise<any[]>;
+    getBrandStats(brandId: string, ownerId: string): Promise<any>;
 }

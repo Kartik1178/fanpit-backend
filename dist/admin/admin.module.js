@@ -8,14 +8,27 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AdminModule = void 0;
 const common_1 = require("@nestjs/common");
+const mongoose_1 = require("@nestjs/mongoose");
+const admin_controller_1 = require("./admin.controller");
+const admin_service_1 = require("./admin.service");
+const user_schema_1 = require("../users/schemas/user.schema");
+const brand_schema_1 = require("../brands/schemas/brand.schema");
+const booking_schema_1 = require("../bookings/schemas/booking.schema");
 let AdminModule = class AdminModule {
 };
 exports.AdminModule = AdminModule;
 exports.AdminModule = AdminModule = __decorate([
     (0, common_1.Module)({
-        imports: [],
-        controllers: [],
-        providers: [],
+        imports: [
+            mongoose_1.MongooseModule.forFeature([
+                { name: user_schema_1.User.name, schema: user_schema_1.UserSchema },
+                { name: brand_schema_1.Brand.name, schema: brand_schema_1.BrandSchema },
+                { name: booking_schema_1.Booking.name, schema: booking_schema_1.BookingSchema },
+            ]),
+        ],
+        controllers: [admin_controller_1.AdminController],
+        providers: [admin_service_1.AdminService],
+        exports: [admin_service_1.AdminService],
     })
 ], AdminModule);
 //# sourceMappingURL=admin.module.js.map

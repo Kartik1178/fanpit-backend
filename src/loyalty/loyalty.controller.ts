@@ -19,7 +19,7 @@ import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { SimpleJwtGuard } from '../common/guards/simple-jwt.guard';
 import { BypassAuthGuard } from '../common/guards/bypass-auth.guard';
 import { RolesGuard } from '../common/guards/roles.guard';
-import { Roles } from '../common/guards/roles.guard';
+import { Roles } from '../common/decorators/roles.decorator';
 import { UserRole } from '../users/schemas/user.schema';
 
 @Controller('loyalty')

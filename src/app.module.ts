@@ -11,6 +11,7 @@ import { DashboardModule } from './dashboard/dashboard.module';
 import { PaymentsModule } from './payments/payments.module';
 import { LoyaltyModule } from './loyalty/loyalty.module';
 import { AdminModule } from './admin/admin.module';
+import { StaffModule } from './staff/staff.module';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
@@ -32,6 +33,7 @@ console.log('MONGO_URI =>', process.env.MONGO_URI);
     PaymentsModule,
     LoyaltyModule,
     AdminModule,
+    StaffModule,
   ],
 })
 export class AppModule {}
