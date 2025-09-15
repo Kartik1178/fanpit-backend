@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.BrandsController = void 0;
 const common_1 = require("@nestjs/common");
 const brands_service_1 = require("./brands.service");
+const spaces_service_1 = require("../spaces/spaces.service");
 const create_brand_dto_1 = require("./dto/create-brand.dto");
 const update_brand_dto_1 = require("./dto/update-brand.dto");
 const robust_jwt_guard_1 = require("../common/guards/robust-jwt.guard");
@@ -22,8 +23,9 @@ const roles_guard_1 = require("../common/guards/roles.guard");
 const roles_decorator_1 = require("../common/decorators/roles.decorator");
 const user_schema_1 = require("../users/schemas/user.schema");
 let BrandsController = class BrandsController {
-    constructor(brandsService) {
+    constructor(brandsService, spacesService) {
         this.brandsService = brandsService;
+        this.spacesService = spacesService;
     }
     create(createBrandDto, req) {
         return this.brandsService.create({
@@ -63,7 +65,11 @@ let BrandsController = class BrandsController {
         return this.brandsService.findOne(id);
     }
     async getBrandSpaces(id, req) {
-        return this.brandsService.getBrandSpaces(id, req.user.sub);
+        const brand = await this.brandsService.findOne(id);
+        if (brand?.owner?.toString && brand.owner.toString() !== req.user.sub) {
+            return this.brandsService.getBrandSpaces(id, req.user.sub);
+        }
+        return this.spacesService.findByBrand(id);
     }
     update(id, updateBrandDto, req) {
         return this.brandsService.update(id, updateBrandDto, req.user.sub);
@@ -152,6 +158,7 @@ __decorate([
 exports.BrandsController = BrandsController = __decorate([
     (0, common_1.Controller)('brands'),
     (0, common_1.UseGuards)(robust_jwt_guard_1.RobustJwtGuard),
-    __metadata("design:paramtypes", [brands_service_1.BrandsService])
+    __metadata("design:paramtypes", [brands_service_1.BrandsService,
+        spaces_service_1.SpacesService])
 ], BrandsController);
 //# sourceMappingURL=brands.controller.js.map

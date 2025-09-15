@@ -1,9 +1,11 @@
 import { BrandsService } from './brands.service';
+import { SpacesService } from '../spaces/spaces.service';
 import { CreateBrandDto } from './dto/create-brand.dto';
 import { UpdateBrandDto } from './dto/update-brand.dto';
 export declare class BrandsController {
     private readonly brandsService;
-    constructor(brandsService: BrandsService);
+    private readonly spacesService;
+    constructor(brandsService: BrandsService, spacesService: SpacesService);
     create(createBrandDto: CreateBrandDto, req: any): Promise<import("./schemas/brand.schema").Brand>;
     findAll(): Promise<{
         brands: import("./schemas/brand.schema").Brand[];

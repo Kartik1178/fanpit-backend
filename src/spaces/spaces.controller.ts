@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Put,
   Query,
   UseGuards,
   Request
@@ -27,10 +28,8 @@ export class SpacesController {
   @UseGuards(RobustJwtGuard, RolesGuard)
   @Roles(UserRole.BRAND_OWNER, UserRole.STAFF, UserRole.ADMIN)
   create(@Body() createSpaceDto: CreateSpaceDto, @Request() req) {
-    // Set the brand from the authenticated user
-    if (req.user.role === UserRole.BRAND_OWNER || req.user.role === UserRole.STAFF) {
-      createSpaceDto.brand = req.user.brandId || req.user.sub;
-    }
+    // Do NOT overwrite brand with user id; expect a valid brand ObjectId in body.
+    // Optionally, add an authorization check to ensure the user owns the brand.
     return this.spacesService.create(createSpaceDto);
   }
 
@@ -62,6 +61,13 @@ export class SpacesController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.spacesService.findOne(id);
+  }
+
+  @Put(':id')
+  @UseGuards(RobustJwtGuard, RolesGuard)
+  @Roles(UserRole.BRAND_OWNER, UserRole.STAFF, UserRole.ADMIN)
+  updatePut(@Param('id') id: string, @Body() updateSpaceDto: UpdateSpaceDto, @Request() req) {
+    return this.spacesService.update(id, updateSpaceDto);
   }
 
   @Patch(':id')

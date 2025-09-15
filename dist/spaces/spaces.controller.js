@@ -27,9 +27,6 @@ let SpacesController = class SpacesController {
         this.spacesService = spacesService;
     }
     create(createSpaceDto, req) {
-        if (req.user.role === user_schema_1.UserRole.BRAND_OWNER || req.user.role === user_schema_1.UserRole.STAFF) {
-            createSpaceDto.brand = req.user.brandId || req.user.sub;
-        }
         return this.spacesService.create(createSpaceDto);
     }
     findAll(queryDto) {
@@ -49,6 +46,9 @@ let SpacesController = class SpacesController {
     }
     findOne(id) {
         return this.spacesService.findOne(id);
+    }
+    updatePut(id, updateSpaceDto, req) {
+        return this.spacesService.update(id, updateSpaceDto);
     }
     update(id, updateSpaceDto, req) {
         return this.spacesService.update(id, updateSpaceDto);
@@ -107,6 +107,17 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], SpacesController.prototype, "findOne", null);
+__decorate([
+    (0, common_1.Put)(':id'),
+    (0, common_1.UseGuards)(robust_jwt_guard_1.RobustJwtGuard, roles_guard_1.RolesGuard),
+    (0, roles_decorator_1.Roles)(user_schema_1.UserRole.BRAND_OWNER, user_schema_1.UserRole.STAFF, user_schema_1.UserRole.ADMIN),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Body)()),
+    __param(2, (0, common_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, update_space_dto_1.UpdateSpaceDto, Object]),
+    __metadata("design:returntype", void 0)
+], SpacesController.prototype, "updatePut", null);
 __decorate([
     (0, common_1.Patch)(':id'),
     (0, common_1.UseGuards)(robust_jwt_guard_1.RobustJwtGuard, roles_guard_1.RolesGuard),

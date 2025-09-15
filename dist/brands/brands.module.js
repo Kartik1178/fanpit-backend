@@ -12,6 +12,7 @@ const mongoose_1 = require("@nestjs/mongoose");
 const brands_controller_1 = require("./brands.controller");
 const brands_service_1 = require("./brands.service");
 const brand_schema_1 = require("./schemas/brand.schema");
+const spaces_module_1 = require("../spaces/spaces.module");
 let BrandsModule = class BrandsModule {
 };
 exports.BrandsModule = BrandsModule;
@@ -19,6 +20,7 @@ exports.BrandsModule = BrandsModule = __decorate([
     (0, common_1.Module)({
         imports: [
             mongoose_1.MongooseModule.forFeature([{ name: brand_schema_1.Brand.name, schema: brand_schema_1.BrandSchema }]),
+            spaces_module_1.SpacesModule,
         ],
         controllers: [brands_controller_1.BrandsController],
         providers: [brands_service_1.BrandsService],

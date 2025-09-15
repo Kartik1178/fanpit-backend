@@ -28,16 +28,25 @@ let JwtStrategy = class JwtStrategy extends (0, passport_1.PassportStrategy)(pas
     async validate(payload) {
         console.log('🚨 JWT STRATEGY CALLED!');
         console.log('🔍 JWT Strategy - Payload received:', payload);
+        const normalizeRole = (role) => {
+            if (!role)
+                return undefined;
+            if (role === 'brand_owner')
+                return 'brandOwner';
+            return role;
+        };
         if (!payload || !payload.sub) {
             console.log('❌ JWT Strategy - No payload or sub');
             throw new common_1.UnauthorizedException();
         }
-        console.log('✅ JWT Strategy - User validated successfully');
-        return {
+        const user = {
+            userId: payload.sub,
             sub: payload.sub,
             email: payload.email,
-            role: payload.role
+            role: normalizeRole(payload.role)
         };
+        console.log('✅ JWT Strategy - User validated successfully with user object:', user);
+        return user;
     }
 };
 exports.JwtStrategy = JwtStrategy;

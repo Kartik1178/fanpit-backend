@@ -1,5 +1,7 @@
 import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards, Request } from '@nestjs/common';
 import { BrandsService } from './brands.service';
+import { ForbiddenException, NotFoundException } from '@nestjs/common';
+import { SpacesService } from '../spaces/spaces.service';
 import { CreateBrandDto } from './dto/create-brand.dto';
 import { UpdateBrandDto } from './dto/update-brand.dto';
 import { RobustJwtGuard } from '../common/guards/robust-jwt.guard';
@@ -10,7 +12,10 @@ import { UserRole } from '../users/schemas/user.schema';
 @Controller('brands')
 @UseGuards(RobustJwtGuard)
 export class BrandsController {
-  constructor(private readonly brandsService: BrandsService) {}
+  constructor(
+    private readonly brandsService: BrandsService,
+    private readonly spacesService: SpacesService,
+  ) {}
 
   @Post()
   @UseGuards(RolesGuard)
@@ -68,7 +73,16 @@ export class BrandsController {
   @UseGuards(RolesGuard)
   @Roles(UserRole.BRAND_OWNER, UserRole.ADMIN)
   async getBrandSpaces(@Param('id') id: string, @Request() req: any) {
-    return this.brandsService.getBrandSpaces(id, req.user.sub);
+    const brand = await this.brandsService.findOne(id);
+    if (!brand) {
+      throw new NotFoundException('Brand not found');
+    }
+    const ownerId = (brand as any).owner?.toString?.() || '';
+    const isAdmin = req.user?.role === UserRole.ADMIN;
+    if (!isAdmin && ownerId !== req.user.sub) {
+      throw new ForbiddenException('You can only view spaces for your own brands');
+    }
+    return this.spacesService.findByBrand(id);
   }
 
   @Put(':id')

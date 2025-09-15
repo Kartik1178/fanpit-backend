@@ -17,6 +17,7 @@ export declare class SpacesController {
     getAmenities(): Promise<string[]>;
     findByBrand(brandId: string): Promise<import("./schemas/space.schema").Space[]>;
     findOne(id: string): Promise<import("./schemas/space.schema").Space>;
+    updatePut(id: string, updateSpaceDto: UpdateSpaceDto, req: any): Promise<import("./schemas/space.schema").Space>;
     update(id: string, updateSpaceDto: UpdateSpaceDto, req: any): Promise<import("./schemas/space.schema").Space>;
     remove(id: string): Promise<void>;
 }
