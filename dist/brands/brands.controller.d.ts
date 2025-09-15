@@ -26,7 +26,7 @@ export declare class BrandsController {
         staffCount: any;
     }[]>;
     findOne(id: string): Promise<import("./schemas/brand.schema").Brand>;
-    getBrandSpaces(id: string, req: any): Promise<any[]>;
+    getBrandSpaces(id: string, req: any): Promise<import("../spaces/schemas/space.schema").Space[]>;
     update(id: string, updateBrandDto: UpdateBrandDto, req: any): Promise<import("./schemas/brand.schema").Brand>;
     remove(id: string, req: any): Promise<void>;
     getBrandAnalytics(id: string, req: any): Promise<any>;

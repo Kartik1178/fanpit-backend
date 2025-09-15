@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.BrandsController = void 0;
 const common_1 = require("@nestjs/common");
 const brands_service_1 = require("./brands.service");
+const common_2 = require("@nestjs/common");
 const spaces_service_1 = require("../spaces/spaces.service");
 const create_brand_dto_1 = require("./dto/create-brand.dto");
 const update_brand_dto_1 = require("./dto/update-brand.dto");
@@ -66,8 +67,13 @@ let BrandsController = class BrandsController {
     }
     async getBrandSpaces(id, req) {
         const brand = await this.brandsService.findOne(id);
-        if (brand?.owner?.toString && brand.owner.toString() !== req.user.sub) {
-            return this.brandsService.getBrandSpaces(id, req.user.sub);
+        if (!brand) {
+            throw new common_2.NotFoundException('Brand not found');
+        }
+        const ownerId = brand.owner?.toString?.() || '';
+        const isAdmin = req.user?.role === user_schema_1.UserRole.ADMIN;
+        if (!isAdmin && ownerId !== req.user.sub) {
+            throw new common_2.ForbiddenException('You can only view spaces for your own brands');
         }
         return this.spacesService.findByBrand(id);
     }
