@@ -15,6 +15,7 @@ const booking_schema_1 = require("./schemas/booking.schema");
 const space_schema_1 = require("../spaces/schemas/space.schema");
 const users_module_1 = require("../users/users.module");
 const auth_module_1 = require("../auth/auth.module");
+const loyalty_module_1 = require("../loyalty/loyalty.module");
 let BookingsModule = class BookingsModule {
 };
 exports.BookingsModule = BookingsModule;
@@ -27,6 +28,7 @@ exports.BookingsModule = BookingsModule = __decorate([
             ]),
             users_module_1.UsersModule,
             auth_module_1.AuthModule,
+            (0, common_1.forwardRef)(() => loyalty_module_1.LoyaltyModule),
         ],
         controllers: [bookings_controller_1.BookingsController],
         providers: [bookings_service_1.BookingsService],

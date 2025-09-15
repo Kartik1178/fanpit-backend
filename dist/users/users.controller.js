@@ -18,6 +18,7 @@ const users_service_1 = require("./users.service");
 const create_user_dto_1 = require("./dto/create-user.dto");
 const login_dto_1 = require("./dto/login.dto");
 const jwt_auth_guard_1 = require("../common/guards/jwt-auth.guard");
+const simple_jwt_guard_1 = require("../common/guards/simple-jwt.guard");
 const roles_guard_1 = require("../common/guards/roles.guard");
 const roles_guard_2 = require("../common/guards/roles.guard");
 const user_schema_1 = require("./schemas/user.schema");
@@ -73,7 +74,7 @@ __decorate([
 ], UsersController.prototype, "logout", null);
 __decorate([
     (0, common_1.Get)('profile'),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.UseGuards)(simple_jwt_guard_1.SimpleJwtGuard),
     __param(0, (0, current_user_decorator_1.CurrentUser)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),

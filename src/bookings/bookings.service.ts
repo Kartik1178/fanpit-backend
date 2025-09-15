@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, BadRequestException, ConflictException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException, ConflictException, Inject, forwardRef } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Booking, BookingDocument, BookingStatus } from './schemas/booking.schema';
@@ -6,12 +6,16 @@ import { Space, SpaceDocument } from '../spaces/schemas/space.schema';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { UpdateBookingDto } from './dto/update-booking.dto';
 import { QueryBookingDto } from './dto/query-booking.dto';
+import { LoyaltyService } from '../loyalty/loyalty.service';
+import { PointsSource } from '../loyalty/schemas/loyalty-member.schema';
 
 @Injectable()
 export class BookingsService {
   constructor(
     @InjectModel(Booking.name) private bookingModel: Model<BookingDocument>,
     @InjectModel(Space.name) private spaceModel: Model<SpaceDocument>,
+    @Inject(forwardRef(() => LoyaltyService))
+    private loyaltyService: LoyaltyService,
   ) {}
 
   async create(createBookingDto: CreateBookingDto, userId: string): Promise<Booking> {
@@ -50,7 +54,17 @@ export class BookingsService {
       status: BookingStatus.PENDING,
     });
 
-    return await booking.save();
+    const savedBooking = await booking.save();
+    
+    // Award loyalty points for booking creation
+    try {
+      await this.awardLoyaltyPoints(savedBooking, 'Booking created');
+    } catch (error) {
+      console.error('Failed to award loyalty points:', error);
+      // Don't fail the booking creation if loyalty points fail
+    }
+
+    return savedBooking;
   }
 
   async findAll(queryDto: QueryBookingDto): Promise<{ bookings: Booking[]; total: number }> {
@@ -124,7 +138,18 @@ export class BookingsService {
       booking.cancelledAt = new Date();
     }
 
-    return await booking.save();
+    const savedBooking = await booking.save();
+
+    // Award loyalty points for booking confirmation
+    if (updateBookingDto.status === BookingStatus.CONFIRMED) {
+      try {
+        await this.awardLoyaltyPoints(savedBooking, 'Booking confirmed');
+      } catch (error) {
+        console.error('Failed to award loyalty points for confirmation:', error);
+      }
+    }
+
+    return savedBooking;
   }
 
   async remove(id: string): Promise<void> {
@@ -229,5 +254,49 @@ export class BookingsService {
       cancelledBookings,
       totalRevenue,
     };
+  }
+
+  private async awardLoyaltyPoints(booking: Booking, description: string): Promise<void> {
+    try {
+      // Get space details to find the brand
+      const space = await this.spaceModel.findById(booking.space).populate('brand');
+      if (!space || !space.brand) {
+        return; // No brand associated, skip loyalty points
+      }
+
+      const brandId = space.brand.toString();
+      const userId = booking.user.toString();
+      const bookingId = (booking as any)._id?.toString() || '';
+
+      // Calculate points based on booking amount and hours
+      const pointsFromAmount = Math.floor(booking.totalAmount * 0.1); // 10% of amount as points
+      const pointsFromHours = booking.totalHours * 10; // 10 points per hour
+      const pointsFromBooking = 50; // Base points for booking
+
+      const totalPoints = pointsFromAmount + pointsFromHours + pointsFromBooking;
+
+      // Award points through loyalty service
+      await this.loyaltyService.earnPoints({
+        userId,
+        brandId,
+        source: PointsSource.BOOKING,
+        points: totalPoints,
+        description,
+        bookingId,
+        metadata: {
+          bookingAmount: booking.totalAmount,
+          bookingHours: booking.totalHours,
+          spaceName: space.name,
+          pointsBreakdown: {
+            fromAmount: pointsFromAmount,
+            fromHours: pointsFromHours,
+            fromBooking: pointsFromBooking
+          }
+        }
+      });
+    } catch (error) {
+      console.error('Error awarding loyalty points:', error);
+      // Don't throw error to avoid breaking the booking flow
+    }
   }
 }

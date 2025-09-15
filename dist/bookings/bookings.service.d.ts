@@ -4,10 +4,12 @@ import { SpaceDocument } from '../spaces/schemas/space.schema';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { UpdateBookingDto } from './dto/update-booking.dto';
 import { QueryBookingDto } from './dto/query-booking.dto';
+import { LoyaltyService } from '../loyalty/loyalty.service';
 export declare class BookingsService {
     private bookingModel;
     private spaceModel;
-    constructor(bookingModel: Model<BookingDocument>, spaceModel: Model<SpaceDocument>);
+    private loyaltyService;
+    constructor(bookingModel: Model<BookingDocument>, spaceModel: Model<SpaceDocument>, loyaltyService: LoyaltyService);
     create(createBookingDto: CreateBookingDto, userId: string): Promise<Booking>;
     findAll(queryDto: QueryBookingDto): Promise<{
         bookings: Booking[];
@@ -33,4 +35,5 @@ export declare class BookingsService {
         cancelledBookings: number;
         totalRevenue: number;
     }>;
+    private awardLoyaltyPoints;
 }

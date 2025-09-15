@@ -18,10 +18,13 @@ const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 const booking_schema_1 = require("./schemas/booking.schema");
 const space_schema_1 = require("../spaces/schemas/space.schema");
+const loyalty_service_1 = require("../loyalty/loyalty.service");
+const loyalty_member_schema_1 = require("../loyalty/schemas/loyalty-member.schema");
 let BookingsService = class BookingsService {
-    constructor(bookingModel, spaceModel) {
+    constructor(bookingModel, spaceModel, loyaltyService) {
         this.bookingModel = bookingModel;
         this.spaceModel = spaceModel;
+        this.loyaltyService = loyaltyService;
     }
     async create(createBookingDto, userId) {
         const { space, date, timeSlots, notes, specialRequests, isRecurring, recurringPattern, recurringEndDate } = createBookingDto;
@@ -50,7 +53,14 @@ let BookingsService = class BookingsService {
             recurringEndDate,
             status: booking_schema_1.BookingStatus.PENDING,
         });
-        return await booking.save();
+        const savedBooking = await booking.save();
+        try {
+            await this.awardLoyaltyPoints(savedBooking, 'Booking created');
+        }
+        catch (error) {
+            console.error('Failed to award loyalty points:', error);
+        }
+        return savedBooking;
     }
     async findAll(queryDto) {
         const { space, user, date, startDate, endDate, status, limit = 10, page = 0 } = queryDto;
@@ -108,7 +118,16 @@ let BookingsService = class BookingsService {
         if (updateBookingDto.status === booking_schema_1.BookingStatus.CANCELLED) {
             booking.cancelledAt = new Date();
         }
-        return await booking.save();
+        const savedBooking = await booking.save();
+        if (updateBookingDto.status === booking_schema_1.BookingStatus.CONFIRMED) {
+            try {
+                await this.awardLoyaltyPoints(savedBooking, 'Booking confirmed');
+            }
+            catch (error) {
+                console.error('Failed to award loyalty points for confirmation:', error);
+            }
+        }
+        return savedBooking;
     }
     async remove(id) {
         const result = await this.bookingModel.findByIdAndDelete(id);
@@ -177,13 +196,51 @@ let BookingsService = class BookingsService {
             totalRevenue,
         };
     }
+    async awardLoyaltyPoints(booking, description) {
+        try {
+            const space = await this.spaceModel.findById(booking.space).populate('brand');
+            if (!space || !space.brand) {
+                return;
+            }
+            const brandId = space.brand.toString();
+            const userId = booking.user.toString();
+            const bookingId = booking._id?.toString() || '';
+            const pointsFromAmount = Math.floor(booking.totalAmount * 0.1);
+            const pointsFromHours = booking.totalHours * 10;
+            const pointsFromBooking = 50;
+            const totalPoints = pointsFromAmount + pointsFromHours + pointsFromBooking;
+            await this.loyaltyService.earnPoints({
+                userId,
+                brandId,
+                source: loyalty_member_schema_1.PointsSource.BOOKING,
+                points: totalPoints,
+                description,
+                bookingId,
+                metadata: {
+                    bookingAmount: booking.totalAmount,
+                    bookingHours: booking.totalHours,
+                    spaceName: space.name,
+                    pointsBreakdown: {
+                        fromAmount: pointsFromAmount,
+                        fromHours: pointsFromHours,
+                        fromBooking: pointsFromBooking
+                    }
+                }
+            });
+        }
+        catch (error) {
+            console.error('Error awarding loyalty points:', error);
+        }
+    }
 };
 exports.BookingsService = BookingsService;
 exports.BookingsService = BookingsService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)(booking_schema_1.Booking.name)),
     __param(1, (0, mongoose_1.InjectModel)(space_schema_1.Space.name)),
+    __param(2, (0, common_1.Inject)((0, common_1.forwardRef)(() => loyalty_service_1.LoyaltyService))),
     __metadata("design:paramtypes", [mongoose_2.Model,
-        mongoose_2.Model])
+        mongoose_2.Model,
+        loyalty_service_1.LoyaltyService])
 ], BookingsService);
 //# sourceMappingURL=bookings.service.js.map

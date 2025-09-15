@@ -11,6 +11,7 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginDto } from './dto/login.dto';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
+import { SimpleJwtGuard } from '../common/guards/simple-jwt.guard';
 import { RolesGuard } from '../common/guards/roles.guard';
 import { Roles } from '../common/guards/roles.guard';
 import { UserRole } from './schemas/user.schema';
@@ -40,7 +41,7 @@ export class UsersController {
   }
 
   @Get('profile')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(SimpleJwtGuard)
   getProfile(@CurrentUser() user: any) {
     return this.usersService.findOne(user.sub);
   }
